@@ -1,51 +1,47 @@
 <template>
-    <!-- <Suspense>
+    <div class="error-message-container" v-if="modelLoadingError">
+        <div class="error-message">
+            Error: Current backend is not supported on your machine. Try Selecting
+            a different backend.
+        </div>
+    </div>
+
+    <Suspense v-else>
         <template #default>
-            <Result />
+            <div class = "still-container">
+                <div class="select-container">
+                    <div class="select-backend">Select Backend:</div>
+                    <select 
+                    v-model="sessionBackend"
+                    :disabled="modelLoading || modelInitializing || sessionRunning"
+                    label="Switch Backend"
+                    :menu-props="{ maxHeight: '750' }"
+                    >
+                    <option v-for="option in backendSelectList" :value="option.value" :key = "option">
+                        {{ option.text }}
+                    </option>
+                    </select>
+                </div>
+                <div class="inference-time-container">
+                    <span class="inference-time">Inference Time: </span>
+                    <span v-if="inferenceTime> 0" class="inference-time-value">{{ inferenceTime.toFixed(1) }} ms </span>
+                    <span v-else></span>
+                </div>
+            </div>
         </template>
         <template #fallback>
-            <h1>Loading...</h1>
+            <VStatus
+                :modelLoading="modelLoading"
+                :modelInitializing="modelInitializing"
+                :sessionRunning="sessionRunning"
+            />  <!--v-if="modelLoading || modelInitializing || sessionRunning"-->
         </template>
-    </Suspense> -->
-  <div>
-    <VStatus
-      v-if="modelLoading || modelInitializing || sessionRunning"
-      :modelLoading="modelLoading"
-      :modelInitializing="modelInitializing"
-      :sessionRunning="sessionRunning"
-    />
-    <div>
-      <div class="select-container">
-        <div class="select-backend">Select Backend:</div>
-        <select 
-          v-model="sessionBackend"
-          :disabled="modelLoading || modelInitializing || sessionRunning"
-          label="Switch Backend"
-          :menu-props="{ maxHeight: '750' }"
-        >
-        <option v-for="option in backendSelectList" :value="option.value" :key = "option">
-            {{ option.text }}
-        </option>
-        </select>
-      </div>
-      <div class="error-message-container">
-        <div v-if="modelLoadingError" class="error-message">
-          Error: Current backend is not supported on your machine. Try Selecting
-          a different backend.
-        </div>
-      </div>
-    </div>
-    <div class="inference-time-class">
-        <span class="inference-time">Inference Time: </span>
-        <span v-if="inferenceTime> 0" class="inference-time-value">{{ inferenceTime.toFixed(1) }} ms </span>
-        <span v-else></span>
-    </div>
-  </div>
+    </Suspense>
 </template>
 
 
 <script setup>
-import { ref, watch, onBeforeUnmount, inject, toRef, toRaw, defineProps, onMounted  } from 'vue'
+import { ref, watch, onBeforeUnmount, inject, toRef, toRaw, defineProps,   } from 'vue'
 
 import * as runModelUtilsONNX from './common/runModelONNX'
 import * as runModelUtilsHuman from './common/runModelHuman'
@@ -88,25 +84,25 @@ watch(sessionBackend, async function(){
         modelLoadingError.value = true;
     }
 });
-onMounted(async ()=>{
-    if (props.modelName.startsWith('tf')){
-        const FilepathNR = toRef(props, 'modelFilepath');
-        modelFile.value = FilepathNR.value;
-    }
-    else{
-        const response = await fetch(props.modelFilepath);
-        modelFile.value = await response.arrayBuffer();
-    }
+// onMounted(async ()=>{
+//     if (props.modelName.startsWith('tf')){
+//         const FilepathNR = toRef(props, 'modelFilepath');
+//         modelFile.value = FilepathNR.value;
+//     }
+//     else{
+//         const response = await fetch(props.modelFilepath);
+//         modelFile.value = await response.arrayBuffer();
+//     }
 
-    console.log(modelFile.value,modelFile);
-    try{
-        // console.log(modelFile.value,'modelfile_val');
-        await initSession();
-    }
-    catch(e){
-        sessionBackend.value = "wasm";
-    }
-});
+//     console.log(modelFile.value,modelFile);
+//     try{
+//         // console.log(modelFile.value,'modelfile_val');
+//         await initSession();
+//     }
+//     catch(e){
+//         sessionBackend.value = "wasm";
+//     }
+// });
 onBeforeUnmount(()=> {
     session.value = undefined;
     gpuSession.value = undefined;
@@ -316,23 +312,23 @@ function clearAll(){
 set_elem_functions_(props.modelName,runModel);
 
 // (async () => {
-    // if (props.modelName.startsWith('tf')){
-    //     const FilepathNR = toRef(props, 'modelFilepath');
-    //     modelFile.value = FilepathNR.value;
-    // }
-    // else{
-    //     const response = await fetch(props.modelFilepath);
-    //     modelFile.value = await response.arrayBuffer();
-    // }
+if (props.modelName.startsWith('tf')){
+    const FilepathNR = toRef(props, 'modelFilepath');
+    modelFile.value = FilepathNR.value;
+}
+else{
+    const response = await fetch(props.modelFilepath);
+    modelFile.value = await response.arrayBuffer();
+}
 
-    // console.log(modelFile.value,modelFile);
-    // try{
-    //     // console.log(modelFile.value,'modelfile_val');
-    //     await initSession();
-    // }
-    // catch(e){
-    //     sessionBackend.value = "wasm";
-    // }
+console.log(modelFile.value,modelFile);
+try{
+    // console.log(modelFile.value,'modelfile_val');
+    await initSession();
+}
+catch(e){
+    sessionBackend.value = "wasm";
+}
 // })()
 </script>
 
@@ -648,13 +644,13 @@ export default{
     padding: 30px;
     text-align:center;
 }
-.inference-time-class {
+.inference-time-container {
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: center;
 }
-.inference-time-class .inference-time {
+.inference-time-container .inference-time {
       text-align: center;
       /* width: 200px; */
       white-space: nowrap;
@@ -663,7 +659,7 @@ export default{
       font-size: 20px;
       color: black;
     }
-.inference-time-class .inference-time-value {
+.inference-time-container .inference-time-value {
     color: rgb(0, 119, 255);
     text-align: left;
     margin-left: 20px;
