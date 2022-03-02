@@ -1,13 +1,13 @@
 <template>
 <div>
-  <ImageModel
+  <image-model
     :modelFilepath="modelFilepath"
     :imageSize="224"
     :preprocess="preprocess"
     :postprocess="postprocess"
     :warmup="warmupModel"
     model_name = "SimSwap"
-  ></ImageModel>
+  ></image-model>
   <!-- <h1> {{modelFilepath}} </h1> -->
 </div>
 </template>

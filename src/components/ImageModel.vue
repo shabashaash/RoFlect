@@ -1,12 +1,12 @@
 <template>
   <div>
     <!-- session Loading and Initializing Indicator -->
-    <modelStatus
+    <v-status
       v-if="modelLoading || modelInitializing || sessionRunning"
       :modelLoading="modelLoading"
       :modelInitializing="modelInitializing"
       :sessionRunning="sessionRunning"
-    ></modelStatus>
+    ></v-status>
 
     <div>
       <!-- Utility bar to select session backend configs. -->
@@ -103,7 +103,7 @@ import * as runModelUtilsHuman from './common/runModelHuman';
 // );
 
 
-import modelStatus from "./modelStatus.vue";
+import VStatus from "./VStatus.vue";
 
 // import { InferenceSession, Tensor } from "onnxruntime-web";
 // process.on('uncaughtException', function(err){
@@ -125,7 +125,7 @@ export default{
         model_name : {type:String},
     },
     components:{
-        modelStatus
+        VStatus
         // AsyncmodelStatus
     },
     setup(props){

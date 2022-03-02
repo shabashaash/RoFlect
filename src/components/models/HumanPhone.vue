@@ -1,12 +1,12 @@
 <template>
 <div>
-  <ImageModel
+  <image-model
     :modelFilepath="modelFilepath"
     :preprocess="preprocess"
     :postprocess="postprocess"
     :warmup="warmupModel"
     model_name = "tf_Human"
-  ></ImageModel>
+  ></image-model>
   <!-- <h1> {{modelFilepath}} </h1> -->
 </div>
 </template>

@@ -1,13 +1,13 @@
 <template>
 <div>
-  <ImageModel
+  <image-model
     :modelFilepath="modelFilepath"
     :imageSize="112"
     :preprocess="preprocess"
     :postprocess="postprocess"
     :warmup="warmupModel"
     model_name = "ArcFace"
-  ></ImageModel>
+  ></image-model>
   <!-- <h1> {{modelFilepath}} </h1> -->
 </div>
 </template>

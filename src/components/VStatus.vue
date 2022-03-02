@@ -12,7 +12,7 @@ import { computed } from 'vue'; //gonna ref the ctx
 // import { veProgress } from "vue-ellipse-progress";
 
 export default {
-    name:'modelStatus',
+    name:'VStatus',
     components:{
         // veProgress 
     },

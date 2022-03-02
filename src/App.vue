@@ -1,16 +1,16 @@
 <template>
 <div>
   <div v-show="!is_popup_visible">
-    <MainImageLoader/>
+    <main-image-loader/>
   </div>
-  <MainImageLoader v-if="is_popup_visible" :isRunModels="true"/>
+  <main-image-loader v-if="is_popup_visible" :isRunModels="true"/>
   <div class="model-pool">
-    <ArcFace/>
-    <HumanPhone/>
-    <SimSwap/>
+    <arc-face/>
+    <human-phone/>
+    <sim-swap/>
   </div>
   <!-- <canvas class="output"/> -->
-  <OutputCanvas/>
+  <output-canvas/>
 </div>
 
 </template>
@@ -20,13 +20,13 @@ import { initStore } from "./store.js";
 // import { defineAsyncComponent } from 'vue';
 import {provide, readonly, ref} from "vue";
 
-import MainImageLoader from './components/v-main-image-loader.vue';
+import MainImageLoader from './components/MainImageLoader.vue';
 
 import ArcFace from './components/models/ArcFace.vue';
 import HumanPhone from './components/models/HumanPhone.vue';
 import SimSwap from './components/models/SimSwap.vue';
 
-import OutputCanvas from './components/v-output-canvas.vue';
+import OutputCanvas from './components/OutputCanvas.vue';
 
 // const AsyncArcFace = defineAsyncComponent(() =>
 //   import('./components/models/ArcFace.vue')
