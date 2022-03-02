@@ -26,7 +26,7 @@ export const initStore = () => {
     // };
     const clear_glob_outputs = ()=>{
         for (const key in glob_outputs){
-            glob_outputs[key] = [];
+            glob_outputs[key] = {};
         }
     };
 

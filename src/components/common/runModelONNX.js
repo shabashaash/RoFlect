@@ -56,7 +56,7 @@ export async function warmupModel(model, dims) {
         await model.run(feeds);
     } catch (e) {
         console.error(e);
-        throw new Error();
+        throw new Error(e);
     }
 }
 
@@ -123,7 +123,7 @@ export async function runModel(model, preprocessedData){
       return [output, inferenceTime];
     } catch (e) {
       console.error(e);
-      throw new Error();
+      throw new Error(e);
     }
   }
 

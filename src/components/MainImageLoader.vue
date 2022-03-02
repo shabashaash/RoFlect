@@ -277,7 +277,7 @@ export default {
       const tf_outputs = ref([]);
 
 
-      onMounted(()=> {
+      onMounted(async ()=> {
         element = document.getElementsByClassName(
             props.isRunModels?"img-cont-sup":"img-cont-main"
         )[0];
@@ -285,6 +285,7 @@ export default {
         element_cont = document.getElementsByClassName(
             props.isRunModels?"cont-sup":"cont-main"
           )[0];
+        await loadImageToCanvas('images/dragdrop.png');
       });
 
       async function loadImageToCanvas(url) {
@@ -359,9 +360,9 @@ export default {
 
     const { getRootProps, getInputProps, ...rest } = useDropzone({ onDrop, noClick:true, accept:"image/png,image/gif,image/jpeg,image/webp" });
     
-    (async () => {
-      await loadImageToCanvas('images/dragdrop.png'); //await 
-    })()
+    // (async () => {
+    //   await loadImageToCanvas('images/dragdrop.png'); //await 
+    // })()
     
     async function dbAction(x0,y0,w,h){
       console.log('inDBACTION');
@@ -408,6 +409,7 @@ export default {
         boxes_id.value = 0;
         clear_glob_outputs();
         updatecanvas_reload(false);
+        updateis_popup_visible(false);
       }
     });
 

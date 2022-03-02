@@ -1,12 +1,4 @@
 <template>
-    <!-- <Suspense>
-        <template #default>
-            <Result />
-        </template>
-        <template #fallback>
-            <h1>Loading...</h1>
-        </template>
-    </Suspense> -->
   <div>
     <VStatus
       v-if="modelLoading || modelInitializing || sessionRunning"
@@ -14,9 +6,12 @@
       :modelInitializing="modelInitializing"
       :sessionRunning="sessionRunning"
     />
-    <div>
+    <div class="static-container">
+        <div class = "modelname">
+            {{modelName}}
+        </div>
       <div class="select-container">
-        <div class="select-backend">Select Backend:</div>
+        <div class="select-backend">Select Backend</div>
         <select 
           v-model="sessionBackend"
           :disabled="modelLoading || modelInitializing || sessionRunning"
@@ -35,7 +30,7 @@
         </div>
       </div>
     </div>
-    <div class="inference-time-class">
+    <div class="inference-time-container">
         <span class="inference-time">Inference Time: </span>
         <span v-if="inferenceTime> 0" class="inference-time-value">{{ inferenceTime.toFixed(1) }} ms </span>
         <span v-else></span>
@@ -167,6 +162,7 @@ async function initSession(){
         
         modelLoading.value = false;
         modelInitializing.value = false;
+        modelLoadingError.value = true;
         if (sessionBackend.value === "webgl") {
             gpuSession.value = undefined;
             console.log('gpuerr');
@@ -175,104 +171,64 @@ async function initSession(){
             console.log('cpuerr');
         }
         throw new Error("Error: Backend (Loading) not supported. ");
+        
     }
     modelLoading.value = false;
     console.log('stop loading');
-
-    if (props.modelName.startsWith('tf')){
-        if (sessionBackend.value === "webgl") {
-            console.log('warupwebglTS');
-            setTimeout(async () => {
-                try { 
-                    await props.warmup(toRaw(session.value));
-                } catch {
-                    modelLoading.value = false;
-                    modelInitializing.value = false;
-                    gpuSession.value = undefined;
-
-                    session.value = undefined;
-                    modelLoading.value = false;
-                    modelLoadingError.value = true;
-
-                    console.log('CUSTOMERROR');
-                    throw new Error("Error: Backend (Initial) not supported. ");
-                }
+    console.log(toRaw(session.value),modelFile.value,'CHECKMEEE');
+    if (sessionBackend.value === "webgl") {
+        console.log('warupwebgl');
+        setTimeout(async () => {
+            try { 
+                await props.warmup(toRaw(session.value));
+            } catch {
+                modelLoading.value = false;
                 modelInitializing.value = false;
-            
-            }, 1000);
-            
-        } else {
-            console.log('warmup-wasmTS');
-            setTimeout(async () => { 
-                try{ 
-                    console.log(session.value,'s3inasync');
-                    // await runModelUtilsHuman.warmupModel(toRaw(session.value));
-                    await props.warmup(toRaw(session.value));
-                    modelInitializing.value = false;
-                } catch {
-                    modelLoading.value = false;
-                    modelInitializing.value = false;
-                    cpuSession.value = undefined;
-                    
-                    session.value = undefined;
-                    modelLoading.value = false;
-                    modelLoadingError.value = true;
-                    
-                    console.log('CUSTOMERROR');
-                    // console.log(e);
-                    throw new Error("Error: Backend (Initial) not supported. ");
-                }
-            }, 1000);
-        }
-    }
-    else{
-        if (sessionBackend.value === "webgl") {
-            console.log('warupwebgl');
-            setTimeout(async () => {
-                try { 
-                    await props.warmup(session.value);
-                } catch  {
-                    modelLoading.value = false;
-                    modelInitializing.value = false;
-                    gpuSession.value = undefined;
+                gpuSession.value = undefined;
 
-                    session.value = undefined;
-                    modelLoading.value = false;
-                    modelLoadingError.value = true;
+                session.value = undefined;
+                modelLoading.value = false;
+                modelLoadingError.value = true;
 
-                    console.log('CUSTOMERROR');
-                    throw new Error("Error: Backend (Initial) not supported. ");
-                }
+                console.log('CUSTOMERROR');
+                throw new Error("Error: Backend (Initial) not supported. ");
+            }
+            modelInitializing.value = false;
+        
+        }, 1000);
+        
+    } else {
+        console.log('warmup-wasm');
+        setTimeout(async () => { 
+            try{ 
+                console.log(session.value,'s3inasync');
+                // await runModelUtilsHuman.warmupModel(toRaw(session.value));
+                await props.warmup(toRaw(session.value));
                 modelInitializing.value = false;
-            
-            }, 1000);
-            
-        } else {
-            console.log('warmup-wasm');
-            setTimeout(async () => {
-                    
-                try{
-                    console.log(session.value,'s3inasync'); 
-                    await props.warmup(session.value);
-                    modelInitializing.value = false;
-                } catch {
-                    modelLoading.value = false;
-                    modelInitializing.value = false;
-                    cpuSession.value = undefined;
-                    
-                    session.value = undefined;
-                    modelLoading.value = false;
-                    modelLoadingError.value = true;
-                    
-                    console.log('CUSTOMERROR');
-                    throw new Error("Error: Backend (Initial) not supported. ");
-                }
-            }, 1000);
-        }
+            } catch {
+                modelLoading.value = false;
+                modelInitializing.value = false;
+                cpuSession.value = undefined;
+                
+                session.value = undefined;
+                modelLoading.value = false;
+                modelLoadingError.value = true;
+                
+                console.log('CUSTOMERROR');
+                // console.log(e);
+                throw new Error("Error: Backend (Initial) not supported. ");
+            }
+        }, 1000);
     }
 }
 
 async function runModel(inputs_){
+
+    if (modelLoadingError.value){
+        throw new Error("Model is not loaded cant run."); 
+    }
+
+
     console.log('IN RUN MODEL',props.modelName);
     var tensorOutput = null;
     // nextTick(async function() { 
@@ -638,23 +594,38 @@ export default{
   align-items: flex-start;
   justify-content: center;
 } */
-.select-container{
+.static-container .modelname{
+    position: relative;
+    color: rgb(0, 119, 255);
+    margin-top: 20px;
+    font-size: 20px;
+}
+.static-container .select-container{
     display: flex;
     align-items: center;
     justify-content: center;
 
     margin: auto;
     width: 40%;
-    padding: 30px;
+    padding: 10px;
     text-align:center;
 }
-.inference-time-class {
+.static-container .select-container .select-backend{
+    padding-right: 5px;
+}
+.static-container .error-message-container {
+    display: flex;
+}
+.static-container .error-message-container .error-message{
+    padding-bottom: 30px;
+}
+.inference-time-container {
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: center;
 }
-.inference-time-class .inference-time {
+.inference-time-container .inference-time {
       text-align: center;
       /* width: 200px; */
       white-space: nowrap;
@@ -663,17 +634,12 @@ export default{
       font-size: 20px;
       color: black;
     }
-.inference-time-class .inference-time-value {
+.inference-time-container .inference-time-value {
     color: rgb(0, 119, 255);
     text-align: left;
     margin-left: 20px;
     font-family: sans-serif;
     font-size: 20px;
 }
-.error-message-container {
-    display: flex;
-}
-.error-message-container .error-message{
-    padding-bottom: 30px;
-}
+
 </style>
