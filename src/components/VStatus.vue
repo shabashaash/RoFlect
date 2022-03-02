@@ -4,9 +4,40 @@
     <ve-progress :loading="true" :size="25"/>
   </div>
 </template>
-
-<script>
+<script setup>
+import { computed, defineProps } from 'vue'
+const props = defineProps({
+  modelLoading:Boolean,
+  modelInitializing:Boolean,
+  sessionRunning:Boolean
+});
+const messagecomputed = computed(function(){
+    if (props.modelLoading) {
+        return "Loading model...";
+    } else if (props.modelInitializing) {
+        return "Loading model done. Initializing model...";
+    } else if (props.sessionRunning) {
+        console.log("RUNNIG MODEL");
+        return "Running model...";
+    } else {
+        return "";
+    }
+});
+</script>
+<!--<script>
 import { computed } from 'vue';
+
+
+const props = defineProps({
+  modelLoading:Boolean,
+  modelInitializing:Boolean,
+  sessionRunning:Boolean
+});
+
+
+
+
+
 
 export default {
     name:'VStatus',
@@ -35,11 +66,11 @@ export default {
             }
         });
         return{
-            messagecomputed:messagecomputed
+            messagecomputed
         };
     }
 }
-</script>
+</script> -->
 <style scoped>
 .model-status-background {
   position: relative;
