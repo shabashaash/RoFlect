@@ -24,53 +24,7 @@ const messagecomputed = computed(function(){
     }
 });
 </script>
-<!--<script>
-import { computed } from 'vue';
 
-
-const props = defineProps({
-  modelLoading:Boolean,
-  modelInitializing:Boolean,
-  sessionRunning:Boolean
-});
-
-
-
-
-
-
-export default {
-    name:'VStatus',
-    props:{
-        modelLoading:{
-            type:Boolean
-        },
-        modelInitializing:{
-            type:Boolean
-        },
-        sessionRunning:{
-            type:Boolean
-        }
-    },
-    setup(props){
-        const messagecomputed = computed(function(){
-            if (props.modelLoading) {
-                return "Loading model...";
-            } else if (props.modelInitializing) {
-                return "Loading model done. Initializing model...";
-            } else if (props.sessionRunning) {
-                console.log("RUNNIG MODEL");
-                return "Running model...";
-            } else {
-                return "";
-            }
-        });
-        return{
-            messagecomputed
-        };
-    }
-}
-</script> -->
 <style scoped>
 .model-status-background {
   position: relative;

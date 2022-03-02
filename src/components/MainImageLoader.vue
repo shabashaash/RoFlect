@@ -359,11 +359,7 @@ export default {
     }
 
     const { getRootProps, getInputProps, ...rest } = useDropzone({ onDrop, noClick:true, accept:"image/png,image/gif,image/jpeg,image/webp" });
-    
-    // (async () => {
-    //   await loadImageToCanvas('images/dragdrop.png'); //await 
-    // })()
-    
+        
     async function dbAction(x0,y0,w,h){
       console.log('inDBACTION');
       console.log(x0,y0,w,h);
@@ -430,39 +426,21 @@ export default {
 
 
 <style scoped>
-/* .upload-drag .myclassclickercmn * {
-  z-index:2;
-}  */
 .upload-drag .upload .text-center canvas {
   max-width: 1200px;
   max-height: 1200px;
-  /* z-index: v-bind('z_index'); */
-  /* position:absolute; */
-  /* position: relative; */
 }
 
 .cont-main{
   max-width: 1200px;
   max-height: 1200px;
-  /* vertical-align: middle; */
-  /* border-style: none; */
   margin-left: auto;
-  margin-right: auto;   
-  /* z-index: 2; */
+  margin-right: auto;
   position: relative;
-  /* text-align: center !important; */
-  /* position: relative; */
-  /* z-index:1; 
-  /* position:absolute; */
 }
 
 
 .cont-sup{
-  /* max-width: 1200px;
-  max-height: 1200px;
-  margin-left: auto;
-  margin-right: auto;   
-  position: relative; */
   background-color:rgb(255, 255, 255);
   border: 1px #000000 solid;
 }
@@ -526,19 +504,10 @@ export default {
   text-align: center !important;
   padding: .5rem !important;
   position: relative;
-
-
-
-
-  /* align-items: center;
-  justify-content: center;
-  vertical-align: middle; */
 }
 .upload-drag .upload {
   text-align: center !important;
   padding: .5rem !important;
-  /* z-index: 0; */
-  /* border: 1px #000000 solid; */
 }
 .upload-drag{
   z-index: 0;
@@ -548,10 +517,6 @@ export default {
   display: inline-block;
   margin-bottom: .5rem;
 }
-
-/* .upload-drag .upload .text-center .clickable-face{
-  text-align: start !important;
-} */
 
 canvas {
   vertical-align: middle;
