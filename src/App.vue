@@ -1,16 +1,16 @@
 <template>
 <div>
   <div v-show="!is_popup_visible">
-    <main-image-loader/>
+    <MainImageLoader/>
   </div>
-  <main-image-loader v-if="is_popup_visible" :isRunModels="true"/>
+  <MainImageLoader v-if="is_popup_visible" :is-run-models="true"/>
   <div class="model-pool">
-    <arc-face/>
-    <human-phone/>
-    <sim-swap/>
+    <ArcFace/>
+    <HumanPhone/>
+    <SimSwap/>
   </div>
   <!-- <canvas class="output"/> -->
-  <output-canvas/>
+  <OutputCanvas/>
 </div>
 
 </template>
@@ -64,7 +64,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .model-pool{
   text-align: center;
   /* vertical-align: middle; */

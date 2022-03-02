@@ -1,14 +1,13 @@
 <template>
 <div>
-  <image-model
-    :modelFilepath="modelFilepath"
-    :imageSize="224"
+  <ImageModel
+    :model-filepath="modelFilepath"
+    :image-size="224"
     :preprocess="preprocess"
     :postprocess="postprocess"
     :warmup="warmupModel"
-    model_name = "SimSwap"
-  ></image-model>
-  <!-- <h1> {{modelFilepath}} </h1> -->
+    model-name = "SimSwap"
+  />
 </div>
 </template>
 
@@ -16,7 +15,7 @@
 
 <script>
 import ImageModel from "../ImageModel.vue";
-import { Tensor } from "onnxruntime-web"; //InferenceSession
+import { Tensor } from "onnxruntime-web";
 
 import * as runModelUtils from "../common/runModelONNX.js";
 const MODEL_FILEPATH_PROD = "./onnx_models/Swap_int64/true_visual_224_orig_opset13.onnx"//'../../assets/onnx_models/ArcFace_fix/updated_arcfaceresnet100-8.all.ort';
@@ -50,32 +49,17 @@ export default{
 
         //WRAPAFFINE ВМЕСТО NEAREST RESIZE
         const scaled = resizeImageData(data_in[0],224,224,'bilinear-interpolation'); //nearest-neighbor (вообще должен быть кроп такого размера без ресайза + нужны афинные маски для того чтобы вставить обратно)
-        
         // var norm_data = scaled.data;
         // let channel_step = 0;
-
-
         // for (let i = 0; i < scaled.length; i++) {
         //   norm_data[i] -= IN_MEAN[channel_step];
         //   norm_data[i] /= IN_STD[channel_step];
-
         //   if (i%(512*512) == 0 && i!=0){
         //     channel_step++;
         //     console.log(channel_step,i,'NORM_COUNTER_CHANNEL');
         //   }
         // }
-
-
         const r_data = runModelUtils.imageDataRightFormat(scaled.data, [224,224]); //image scaled.data
-
-
-        
-
-
-
-
-        // console.log(w,h,'whwhwhwhwh');
-
 
         return [new Tensor("float32", r_data, [
           1,
@@ -86,11 +70,7 @@ export default{
       }
 
       async function postprocess(tensor) {
-
-
         var data = new Uint8ClampedArray(224*224*4); //Uint8ClampedArray  ArrayBuffer
-
-
         // for (let i = 0; i < tensor.size; i+=4){
         //   data[i] = tensor.data[i]*255;
         // }
@@ -106,9 +86,7 @@ export default{
         // }
         //1, 2, 0
 
-
         const [redArray, greenArray, blueArray] = new Array(new Array(), new Array(), new Array());
-
         for(let i = 0; i < 224*224; i++) {
           redArray.push(tensor.data[i]*255)          
         }
@@ -122,7 +100,6 @@ export default{
         //   AArray.push(tensor.data[i])          
         // }
 
-
         var t = 0;                                   /// cursor for RGB buffer
         for(let i = 0; i < 224*224*4; i+=4) {
           data[i] = redArray[t];     /// copy RGB data to canvas from custom array
@@ -132,26 +109,15 @@ export default{
           t += 1;
         }
 
-
-
-
-
-
-
-
         console.log(data,'uintdata');
-        // return {
-        //   type_:'ArcFace',
-        //   val:tensor
-        // };
         return data;
       }
 
       return {
-        modelFilepath:modelFilepath,
-        warmupModel:warmupModel,
-        preprocess:preprocess,
-        postprocess:postprocess
+        modelFilepath,
+        warmupModel,
+        preprocess,
+        postprocess
       };
 
     }

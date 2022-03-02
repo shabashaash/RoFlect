@@ -8,12 +8,6 @@
 import {watch, inject, onMounted, toRaw} from "vue";
 export default {
   name: 'OutputCanvas',
-//   props:{
-//     isRunModels:{
-//       type: Boolean,
-//       default: false
-//     }
-//   },
   setup(){
     const output_image = inject('output_image');
     const glob_outputs = inject('glob_outputs');
@@ -27,11 +21,6 @@ export default {
         console.log('IN WATCH SimSwap');
         const {x0, y0, input_data} = toRaw(newVal);
         output_canvas_2d.putImageData(input_data, x0, y0);
-
-        // output_canvas_2d.canvas.width = newVal.width;
-        // output_canvas_2d.canvas.height = newVal.height;
-
-        // output_canvas_2d.drawImage(newVal, 0, 0);
     },
           
     {deep:true}

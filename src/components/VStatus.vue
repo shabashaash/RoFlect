@@ -5,17 +5,11 @@
   </div>
 </template>
 
-
 <script>
-import { computed } from 'vue'; //gonna ref the ctx
-
-// import { veProgress } from "vue-ellipse-progress";
+import { computed } from 'vue';
 
 export default {
     name:'VStatus',
-    components:{
-        // veProgress 
-    },
     props:{
         modelLoading:{
             type:Boolean
@@ -28,8 +22,6 @@ export default {
         }
     },
     setup(props){
-        // const modelLoading = props.;
-        // const modelInitializing = ref(false);
         const messagecomputed = computed(function(){
             if (props.modelLoading) {
                 return "Loading model...";
