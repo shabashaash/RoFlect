@@ -28,6 +28,7 @@ const updateis_popup_visible = (val)=>{
     is_popup_visible.value = val;
     console.log('updating_popup');
 };
+
 provide("is_popup_visible", readonly(is_popup_visible));
 provide("updateis_popup_visible", updateis_popup_visible);
 </script>

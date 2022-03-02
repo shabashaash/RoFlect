@@ -23,10 +23,10 @@
         </option>
         </select>
       </div>
-      <div class="error-message-container">
-        <div v-if="modelLoadingError" class="error-message">
-          Error: Current backend is not supported on your machine. Try Selecting
-          a different backend.
+      <div class="error-message-container" v-if="modelLoadingError">
+        <div class="error-message">
+          Error: Current backend is not supported on your machine. Try selecting
+          a different backend or refreshing the page.
         </div>
       </div>
     </div>
