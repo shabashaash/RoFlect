@@ -12,7 +12,7 @@ function init() {
     ort.env.wasm.numThreads = 4;
     ort.env.wasm.simd = true;
     ort.env.wasm.proxy = true;
-    ort.env.wasm.initTimeout = 1000;
+    // ort.env.wasm.initTimeout = 1000;
   //   ort.env.webgl.matmulMaxBatchSize = 0
   }
 export async function createModelCpu(model){
