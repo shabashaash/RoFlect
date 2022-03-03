@@ -26,7 +26,7 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 ## Model files
 
 ### Change paths in:
-[Suported model types](./src/components/models/)
+[Supported model types](./src/components/models/)
 
 Example paths (same for now):
 https://github.com/shabashaash/RoFlect/blob/7d8479857ff9c000d552858ada3f1782df4781c0/src/components/models/ArcFace.vue#L25
