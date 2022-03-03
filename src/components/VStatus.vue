@@ -1,11 +1,13 @@
 <template>
   <div class="model-status-background">
     <div class="model-status">{{ messagecomputed }}</div>
-    <ve-progress :loading="true" :size="25"/>
+    <VeProgress :loading="true" :size="25"/>
   </div>
 </template>
 <script setup>
 import { computed, defineProps } from 'vue'
+import { VeProgress } from 'vue-ellipse-progress'
+
 const props = defineProps({
   modelLoading:Boolean,
   modelInitializing:Boolean,

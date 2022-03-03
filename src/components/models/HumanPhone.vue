@@ -33,7 +33,7 @@ function preprocess(data_in) {
   return data_in;
 }
 
-async function postprocess(tensor) {
+function postprocess(tensor) {
   var bboxes = [];
   const faces = tensor.face;
 

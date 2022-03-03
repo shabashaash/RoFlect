@@ -96,7 +96,7 @@ onMounted(async ()=>{
         modelFile = await response.arrayBuffer();
     }
 
-    console.log(modelFile,modelFile);
+    // console.log(modelFile,modelFile);
     try{
         // console.log(modelFile.value,'modelfile_val');
         await initSession();
@@ -180,50 +180,27 @@ async function initSession(){
     console.log('stop loading');
     console.log(session);
     console.log(session,modelFile,'CHECKMEEE');
-    if (sessionBackend.value === "webgl") {
-        console.log('warupwebgl');
-        setTimeout(async () => {
-            try { 
-                await props.warmup(session);
-            } catch {
-                modelLoading.value = false;
-                modelInitializing.value = false;
-                gpuSession = undefined;
 
-                session = undefined;
-                modelLoading.value = false;
-                modelLoadingError.value = true;
-
-                console.log('CUSTOMERROR');
-                throw new Error("Error: Backend (Initial) not supported. ");
-            }
+    setTimeout(async () => {
+        try { 
+            await props.warmup(session);
+        } catch {
+            modelLoading.value = false;
             modelInitializing.value = false;
-        
-        }, 1000);
-        
-    } else {
-        console.log('warmup-wasm');
-        setTimeout(async () => { 
-            try{ 
-                console.log(session,'s3inasync');
-                // await runModelUtilsHuman.warmupModel(toRaw(session.value));
-                await props.warmup(session);
-                modelInitializing.value = false;
-            } catch {
-                modelLoading.value = false;
-                modelInitializing.value = false;
-                cpuSession = undefined;
-                
-                session = undefined;
-                modelLoading.value = false;
-                modelLoadingError.value = true;
-                
-                console.log('CUSTOMERROR');
-                // console.log(e);
-                throw new Error("Error: Backend (Initial) not supported. ");
+            modelLoadingError.value = true;
+
+            if (sessionBackend.value === "webgl"){
+                gpuSession = undefined;
             }
-        }, 1000);
-    }
+            else{
+                cpuSession = undefined;
+            }
+            session = undefined;
+            console.log('CUSTOMERROR');
+            throw new Error("Error: Backend (Initial) not supported. ");
+        }
+        modelInitializing.value = false;
+    }, 1000);
 }
 
 async function runModel(inputs_){
@@ -242,12 +219,12 @@ async function runModel(inputs_){
     console.log(preprocessedData);
     
     if (props.modelName.startsWith('tf')){
-        //!!!!
-        [tensorOutput, inferenceTime.value] = await runModelUtilsHuman.runModel(
-            session,
-            preprocessedData
-        );
-        //!!!!
+    //!!!!
+    [tensorOutput, inferenceTime.value] = await runModelUtilsHuman.runModel(
+        session,
+        preprocessedData
+    );
+    //!!!!
     }
     else{
         [tensorOutput, inferenceTime.value] = await runModelUtilsONNX.runModel(
@@ -256,7 +233,7 @@ async function runModel(inputs_){
         );
     }
     console.log(tensorOutput,'TOUTPUT');
-    const postprocessedData = await props.postprocess(tensorOutput); 
+    const postprocessedData = props.postprocess(tensorOutput); 
     sessionRunning.value = false;
     return postprocessedData;
 } 

@@ -70,7 +70,7 @@ function preprocess(data_in) {
   ])];
 }
 
-async function postprocess(tensor) {
+function postprocess(tensor) {
   console.log(tensor,'POSTPROCESS');
 
 

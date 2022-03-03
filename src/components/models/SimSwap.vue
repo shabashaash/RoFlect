@@ -58,7 +58,7 @@ function preprocess(data_in) {
   ]), data_in[1]];
 }
 
-async function postprocess(tensor) {
+function postprocess(tensor) {
   console.log('INSETUPSCRIPT');
   var data = new Uint8ClampedArray(224*224*4); //Uint8ClampedArray  ArrayBuffer
   // for (let i = 0; i < tensor.size; i+=4){
