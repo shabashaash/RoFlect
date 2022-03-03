@@ -33,8 +33,20 @@
 </div>
 </template>
 
-<script>
-import {inject, onMounted, ref, watch } from 'vue' //,watch computed,toRaw,nextTick
+
+<!--<script lang="ts">
+// import { defineComponent } from 'vue'
+
+// export default defineComponent({
+//   setup() {
+    
+//   },
+// })
+// </script>-->
+
+
+<script lang="ts">
+import {defineComponent, inject, onMounted, ref, watch } from 'vue' //,watch computed,toRaw,nextTick
 
 import { useDropzone } from 'vue3-dropzone'
 import loadImage from "blueimp-load-image"
@@ -44,8 +56,21 @@ import Vue3DraggableResizable from '@lzq920/vue3-draggable-resizable';
 import '@lzq920/vue3-draggable-resizable/dist/Vue3DraggableResizable.css';
 
 
+import {
+  CanvasReloadKey,
+  UpdateCanvasReloadKey,
+  FunctionsKey,
+  GlobOutputsKey,
+  UpdateIsPopupVisibleKey,
+  SetElemGlobOutputsKey,
+  ClearGlobOutputsKey,
+  OutputImageKey
+} from '../symbols'
 
-export default {
+
+
+
+export default defineComponent({
   name: 'MainImageLoader',
   components: {
     Vue3DraggableResizable
@@ -57,14 +82,14 @@ export default {
     }
   },
   setup(props) {
-      const canvas_reload  = inject('canvas_reload');
-      const updatecanvas_reload = inject('updatecanvas_reload');
-      const functions_ = inject('functions_');
-      const glob_outputs = inject('glob_outputs');
-      const updateis_popup_visible = inject('updateis_popup_visible');
-      const set_elem_glob_outputs = inject('set_elem_glob_outputs');
-      const clear_glob_outputs = inject('clear_glob_outputs');
-      const updateoutput_image = inject('updateoutput_image');
+      const canvas_reload  = inject(CanvasReloadKey);
+      const updatecanvas_reload = inject(UpdateCanvasReloadKey);
+      const functions_ = inject(FunctionsKey);
+      const glob_outputs = inject(GlobOutputsKey);
+      const updateis_popup_visible = inject(UpdateIsPopupVisibleKey);
+      const set_elem_glob_outputs = inject(SetElemGlobOutputsKey);
+      const clear_glob_outputs = inject(ClearGlobOutputsKey);
+      const output_image = inject(OutputImageKey);
       var element = undefined;
       var element_cont = undefined;
       const boxes_id = ref(0);
@@ -84,7 +109,7 @@ export default {
         await loadImageToCanvas('images/dragdrop.png');
       });
 
-      async function loadImageToCanvas(url) {
+      async function loadImageToCanvas(url: string) {
         if (!url) {
           // clearAll();
           console.log('no url');
@@ -223,7 +248,7 @@ export default {
       ...rest
     }
   },
-}
+})
 </script>
 
 

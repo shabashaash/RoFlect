@@ -18,7 +18,7 @@
           label="Switch Backend"
           :menu-props="{ maxHeight: '750' }"
         >
-        <option v-for="option in backendSelectList" :value="option.value" :key = "option">
+        <option v-for="option in backendSelectList" :value="option.value" :key = "option.text">
             {{ option.text }}
         </option>
         </select>
@@ -39,23 +39,31 @@
 </template>
 
 
-<script setup>
-import { ref, watch, onBeforeUnmount, inject, toRef, toRaw, defineProps, onMounted  } from 'vue'
+<script setup lang="ts">
+import { ref, Ref, watch, onBeforeUnmount, inject, toRef, toRaw, onMounted  } from 'vue'
+
+
+import { UpdateCanvasReloadKey, SetElemFunctionsKey } from "../symbols"
 
 import * as runModelUtilsONNX from './common/runModelONNX'
 import * as runModelUtilsHuman from './common/runModelHuman'
 
+import {InferenceSession} from './common/runModelONNX';
+
+// import {InferenceSession} from './common/runModelONNX';
+
+
 import VStatus from "./VStatus.vue"
 
 
-const props = defineProps({
-    modelFilepath : String,
-    imageSize : Number,
+const props = defineProps<{
+    modelFilepath : string,
+    imageSize : number,
     preprocess : Function,
     postprocess : Function,
     warmup: Function,
-    modelName : String
-});
+    modelName : string
+}>();
 
 const sessionBackend = ref("wasm");
 const backendSelectList = ref([
@@ -66,13 +74,15 @@ const modelLoading = ref(true);
 const modelInitializing = ref(true);
 const modelLoadingError = ref(false);
 const sessionRunning = ref(false);
-const session = ref(undefined); //InferenceSession()
-const gpuSession = ref(undefined); //InferenceSession()
-const cpuSession = ref(undefined); //InferenceSession()
+const session: Ref<InferenceSession | undefined> = ref(undefined); //InferenceSession()
+const gpuSession: Ref<ArrayBuffer | undefined> = ref(undefined); //InferenceSession()
+const cpuSession: Ref<ArrayBuffer | undefined> = ref(undefined); //InferenceSession()
 const inferenceTime = ref(0);
-const modelFile = ref(new ArrayBuffer(0));
-const updatecanvas_reload = inject('updatecanvas_reload');
-const set_elem_functions_ = inject('set_elem_functions_');
+// const modelFile = ref(new ArrayBuffer(0));
+const modelFile: Ref<ArrayBuffer | string> = ref(new ArrayBuffer(0))
+
+const updatecanvas_reload = inject(UpdateCanvasReloadKey);
+const set_elem_functions_ = inject(SetElemFunctionsKey);
 
 
 watch(sessionBackend, async function(){
@@ -155,7 +165,7 @@ async function initSession(){
             }
         }
         
-    } catch (e) {
+    } catch (e: any) {
         console.log(e,'error',e.stack);
         console.log(e.message);
         console.error(e);

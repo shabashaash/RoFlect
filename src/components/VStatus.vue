@@ -4,14 +4,14 @@
     <ve-progress :loading="true" :size="25"/>
   </div>
 </template>
-<script setup>
-import { computed, defineProps } from 'vue'
-const props = defineProps({
-  modelLoading:Boolean,
-  modelInitializing:Boolean,
-  sessionRunning:Boolean
-});
-const messagecomputed = computed(function(){
+<script setup lang="ts">
+import { computed } from 'vue'
+const props = defineProps<{
+  modelLoading:boolean,
+  modelInitializing:boolean,
+  sessionRunning:boolean
+}>()
+const messagecomputed = computed<string>(() => {
     if (props.modelLoading) {
         return "Loading model...";
     } else if (props.modelInitializing) {

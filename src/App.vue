@@ -14,23 +14,17 @@
 
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { initStore } from "./store.js"
-import {provide, readonly, ref} from "vue"
+import {IsPopupVisibleKey} from "./symbols"
+import {inject} from "vue"
 import MainImageLoader from './components/MainImageLoader.vue'
 import ArcFace from './components/models/ArcFace.vue'
 import HumanPhone from './components/models/HumanPhone.vue'
 import SimSwap from './components/models/SimSwap.vue'
 import OutputCanvas from './components/OutputCanvas.vue'
-initStore();
-const is_popup_visible = ref(false);
-const updateis_popup_visible = (val)=>{
-    is_popup_visible.value = val;
-    console.log('updating_popup');
-};
-
-provide("is_popup_visible", readonly(is_popup_visible));
-provide("updateis_popup_visible", updateis_popup_visible);
+initStore()
+const is_popup_visible = inject(IsPopupVisibleKey)
 </script>
 
 <style scoped>

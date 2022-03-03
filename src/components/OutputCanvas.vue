@@ -4,7 +4,7 @@
 </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import {watch, inject, onMounted, toRaw} from "vue"
 
 const output_image = inject('output_image');

@@ -1,6 +1,8 @@
 import {InferenceSession, Tensor} from 'onnxruntime-web';
 import * as ort from 'onnxruntime-web';
 
+export {InferenceSession};
+// export const InferenceSession;
 
 
 // const IN_MEAN = [0.485, 0.456, 0.406];
@@ -13,15 +15,15 @@ function init() {
     ort.env.wasm.simd = true;
   //   ort.env.webgl.matmulMaxBatchSize = 0
   }
-export async function createModelCpu(model){
+export async function createModelCpu(model:ArrayBuffer){
     init();
     return await InferenceSession.create(model, {executionProviders: ['wasm']}); //, executionMode: "parallel"
 }
-export async function createModelGpu(model){
+export async function createModelGpu(model:ArrayBuffer){
     init();
     return await InferenceSession.create(model, {executionProviders: ['webgl']});
 }
-export async function warmupModel(model, dims) {
+export async function warmupModel(model:InferenceSession, dims:number[][]) {
     console.log(model,'modelinwarmuponnx');
     // OK. we generate a random input and call Session.run() as a warmup query
     // var warmupTensors = [];
@@ -30,8 +32,8 @@ export async function warmupModel(model, dims) {
     //   dims = [dims];
     // }
 
-    const feeds= {};
-    for (var i = 0; i < dims.length; i++){
+    const feeds = {};
+    for (let i = 0; i < dims.length; i++){
       const size = dims[i].reduce((a, b) => a * b);
       const warmupTensor = new Tensor('float32', new Float32Array(size), dims[i]);
 
@@ -184,14 +186,15 @@ export function imageDataRightFormat(imageBufferData, imageSize) {
     const transposedData = redArray.concat(greenArray).concat(blueArray);
     // console.log(transposedData,'tData');
     // 4. convert to float32
-    let i, l = transposedData.length; // length, we need this for the loop
+
+    const l = transposedData.length; // length, we need this for the loop
     // console.log(redArray,'redARRAY');
 
     // let channel_step = 0;
 
     // create the Float32Array size 3 * 224 * 224 for these dimensions output
     const float32Data = new Float32Array(imageSize[0]*imageSize[1]*3);
-    for (i = 0; i < l; i++) {
+    for (let i = 0; i < l; i++) {
       float32Data[i] = transposedData[i] / 255.0; // convert to float
 
       // float32Data[i] -= IN_MEAN[channel_step];
