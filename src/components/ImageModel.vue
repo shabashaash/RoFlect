@@ -187,7 +187,7 @@ async function initSession(){
     console.log(session);
     console.log(session,modelFile,'CHECKMEEE');
 
-    setTimeout(async () => {
+    // setTimeout(async () => {
         try { 
             await props.warmup(session);
         } catch {
@@ -206,7 +206,7 @@ async function initSession(){
             throw new Error("Error: Backend (Initial) not supported. ");
         }
         modelInitializing.value = false;
-    }, 1000);
+    // }, 1000);
 }
 
 async function runModel(inputs_){
@@ -219,7 +219,7 @@ async function runModel(inputs_){
     console.log('IN RUN MODEL',props.modelName);
     var tensorOutput = null;
     sessionRunning.value = true;
-    await new Promise(resolve => setTimeout(resolve, 100));
+    // await new Promise(resolve => setTimeout(resolve, 100));
     
     const preprocessedData = props.preprocess(inputs_); //.data для onnx
     console.log(session, 'session');
