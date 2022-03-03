@@ -150,13 +150,13 @@ export default {
         );
         console.log(imageData,'imageData');
 
-        var tf_outputs_loc = await functions_['tf_Human'](imageData);
+        var tf_outputs_loc = await functions_.value['tf_Human'](imageData);
         for (let i = 0; i < tf_outputs_loc.length; i++){
           tf_outputs_loc[i].id = boxes_id.value++;
         }
         tf_outputs.value = tf_outputs_loc;
         
-        console.log(functions_, 'outs');
+        console.log(functions_.value, 'outs');
         console.log(rejectReasons);
     }
 
@@ -168,18 +168,18 @@ export default {
       const ctx = element.getContext("2d");
       const input_data = ctx.getImageData(x0,y0,w,h);
       if (props.isRunModels){
-        const latent_id = await functions_['ArcFace'](input_data);
+        const latent_id = await functions_.value['ArcFace'](input_data);
 
-        console.log(glob_outputs['tf_output'],'gloutclick');
+        console.log(glob_outputs.value['tf_output'],'gloutclick');
         
-        const val = await functions_['SimSwap']([glob_outputs['tf_output'].input_data, latent_id]);
+        const val = await functions_.value['SimSwap']([glob_outputs.value['tf_output'].input_data, latent_id]);
         
-        const swap_res_resized = resizeImageData(new ImageData(val, 224, 224), glob_outputs['tf_output'].w, glob_outputs['tf_output'].h, 'bilinear-interpolation');
+        const swap_res_resized = resizeImageData(new ImageData(val, 224, 224), glob_outputs.value['tf_output'].w, glob_outputs.value['tf_output'].h, 'bilinear-interpolation');
         
         set_elem_glob_outputs('SimSwap', {
           input_data:swap_res_resized,
-          x0:glob_outputs['tf_output'].x0,
-          y0:glob_outputs['tf_output'].y0
+          x0:glob_outputs.value['tf_output'].x0,
+          y0:glob_outputs.value['tf_output'].y0
         }); 
 
       }

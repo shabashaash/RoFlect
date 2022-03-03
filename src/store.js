@@ -8,25 +8,26 @@ export const initStore = () => {
         canvas_reload.value = val;
     };
 
-    const functions_ = reactive({
+    const functions_ = ref({
 
     });
     const set_elem_functions_ = (key, val)=>{
-        functions_[key] = val;
+        functions_.value[key] = val;
     };
 
-    const glob_outputs = reactive({
+    const glob_outputs = ref({
         
     });
     const set_elem_glob_outputs = (key, val)=>{
-        glob_outputs[key] = val;
+        console.log(val,key,"UPDATEDGLOBOUTPUTS")
+        glob_outputs.value[key] = val;
     };
     // const push_elem_glob_outputs = (key, val)=>{
     //     glob_outputs[key].push(val);
     // };
     const clear_glob_outputs = ()=>{
-        for (const key in glob_outputs){
-            glob_outputs[key] = {};
+        for (const key in glob_outputs.value){
+            glob_outputs.value[key] = {};
         }
     };
 
@@ -35,7 +36,9 @@ export const initStore = () => {
     }); //document.createElement("canvas")
     const updateoutput_image = (val) => {
       console.log('updating_out_image',val)
-      output_image.value = val;
+      output_image.h = val.h;
+      output_image.w = val.w;
+      output_image.input_data = val.input_data;
     };
     // const is_popup_visible = ref(false);
     // const updateis_popup_visible = (val)=>{

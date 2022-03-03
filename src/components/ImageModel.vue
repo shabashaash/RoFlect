@@ -40,7 +40,7 @@
 
 
 <script setup>
-import { ref, watch, onBeforeUnmount, inject, toRef, toRaw, defineProps, onMounted  } from 'vue'
+import { ref, watch, onBeforeUnmount, inject, defineProps, onMounted  } from 'vue' //toRef toRaw
 
 import * as runModelUtilsONNX from './common/runModelONNX'
 import * as runModelUtilsHuman from './common/runModelHuman'
@@ -66,11 +66,14 @@ const modelLoading = ref(true);
 const modelInitializing = ref(true);
 const modelLoadingError = ref(false);
 const sessionRunning = ref(false);
-const session = ref(undefined); //InferenceSession()
-const gpuSession = ref(undefined); //InferenceSession()
-const cpuSession = ref(undefined); //InferenceSession()
+
+var session = undefined; //InferenceSession()
+var gpuSession = undefined; //InferenceSession()
+var cpuSession = undefined; //InferenceSession()
+var modelFile = undefined;
+
 const inferenceTime = ref(0);
-const modelFile = ref(new ArrayBuffer(0));
+//ref(new ArrayBuffer(0));
 const updatecanvas_reload = inject('updatecanvas_reload');
 const set_elem_functions_ = inject('set_elem_functions_');
 
@@ -85,15 +88,15 @@ watch(sessionBackend, async function(){
 });
 onMounted(async ()=>{
     if (props.modelName.startsWith('tf')){
-        const FilepathNR = toRef(props, 'modelFilepath');
-        modelFile.value = FilepathNR.value;
+        // const FilepathNR = toRef(props, 'modelFilepath');
+        modelFile = props.modelFilepath;//FilepathNR.value;
     }
     else{
         const response = await fetch(props.modelFilepath);
-        modelFile.value = await response.arrayBuffer();
+        modelFile = await response.arrayBuffer();
     }
 
-    console.log(modelFile.value,modelFile);
+    console.log(modelFile,modelFile);
     try{
         // console.log(modelFile.value,'modelfile_val');
         await initSession();
@@ -103,27 +106,27 @@ onMounted(async ()=>{
     }
 });
 onBeforeUnmount(()=> {
-    session.value = undefined;
-    gpuSession.value = undefined;
-    cpuSession.value = undefined;
+    session = undefined;
+    gpuSession = undefined;
+    cpuSession = undefined;
 });
 
 async function initSession(){
     sessionRunning.value = false;
     modelLoadingError.value = false;
     if (sessionBackend.value === "webgl") {
-    if (gpuSession.value) {
+    if (gpuSession) {
         console.log('gpu-preloaded');
-        session.value = gpuSession.value;
+        session = gpuSession;
         return;
     }
     modelLoading.value = true;
     modelInitializing.value = true;
     }
     if (sessionBackend.value === "wasm") {
-    if (cpuSession.value) {
+    if (cpuSession) {
         console.log('cpu-preloaded');
-        session.value = cpuSession.value;
+        session = cpuSession;
         return;
     }
     modelLoading.value = true;
@@ -132,26 +135,26 @@ async function initSession(){
     try {
         if (props.modelName.startsWith('tf')){
             if (sessionBackend.value === "webgl") {
-                gpuSession.value = await runModelUtilsHuman.createModelGpu(modelFile.value);
+                gpuSession = await runModelUtilsHuman.createModelGpu(modelFile);
                 console.log('created-gpu');
                 console.log(gpuSession.value);
-                session.value = gpuSession.value;
+                session = gpuSession;
             } else if (sessionBackend.value === "wasm") {
-                cpuSession.value = await runModelUtilsHuman.createModelCpu(modelFile.value);
+                cpuSession = await runModelUtilsHuman.createModelCpu(modelFile);
                 console.log('created-cpu');
-                session.value = cpuSession.value;
+                session = cpuSession;
             }
             
         }
         else{
             if (sessionBackend.value === "webgl") {
-                gpuSession.value = await runModelUtilsONNX.createModelGpu(modelFile.value);
+                gpuSession = await runModelUtilsONNX.createModelGpu(modelFile);
                 console.log('created-gpu');
-                session.value = gpuSession.value;
+                session = gpuSession;
             } else if (sessionBackend.value === "wasm") {
-                cpuSession.value = await runModelUtilsONNX.createModelCpu(modelFile.value);
+                cpuSession = await runModelUtilsONNX.createModelCpu(modelFile);
                 console.log('created-cpu');
-                session.value = cpuSession.value;
+                session = cpuSession;
             }
         }
         
@@ -164,10 +167,10 @@ async function initSession(){
         modelInitializing.value = false;
         modelLoadingError.value = true;
         if (sessionBackend.value === "webgl") {
-            gpuSession.value = undefined;
+            gpuSession = undefined;
             console.log('gpuerr');
         } else {
-            cpuSession.value = undefined;
+            cpuSession = undefined;
             console.log('cpuerr');
         }
         throw new Error("Error: Backend (Loading) not supported. ");
@@ -175,18 +178,19 @@ async function initSession(){
     }
     modelLoading.value = false;
     console.log('stop loading');
-    console.log(toRaw(session.value),modelFile.value,'CHECKMEEE');
+    console.log(session);
+    console.log(session,modelFile,'CHECKMEEE');
     if (sessionBackend.value === "webgl") {
         console.log('warupwebgl');
         setTimeout(async () => {
             try { 
-                await props.warmup(toRaw(session.value));
+                await props.warmup(session);
             } catch {
                 modelLoading.value = false;
                 modelInitializing.value = false;
-                gpuSession.value = undefined;
+                gpuSession = undefined;
 
-                session.value = undefined;
+                session = undefined;
                 modelLoading.value = false;
                 modelLoadingError.value = true;
 
@@ -201,16 +205,16 @@ async function initSession(){
         console.log('warmup-wasm');
         setTimeout(async () => { 
             try{ 
-                console.log(session.value,'s3inasync');
+                console.log(session,'s3inasync');
                 // await runModelUtilsHuman.warmupModel(toRaw(session.value));
-                await props.warmup(toRaw(session.value));
+                await props.warmup(session);
                 modelInitializing.value = false;
             } catch {
                 modelLoading.value = false;
                 modelInitializing.value = false;
-                cpuSession.value = undefined;
+                cpuSession = undefined;
                 
-                session.value = undefined;
+                session = undefined;
                 modelLoading.value = false;
                 modelLoadingError.value = true;
                 
@@ -234,20 +238,20 @@ async function runModel(inputs_){
     await new Promise(resolve => setTimeout(resolve, 100));
     
     const preprocessedData = props.preprocess(inputs_); //.data для onnx
-    console.log(session.value, 'session');
+    console.log(session, 'session');
     console.log(preprocessedData);
     
     if (props.modelName.startsWith('tf')){
         //!!!!
         [tensorOutput, inferenceTime.value] = await runModelUtilsHuman.runModel(
-            toRaw(session.value),
+            session,
             preprocessedData
         );
         //!!!!
     }
     else{
         [tensorOutput, inferenceTime.value] = await runModelUtilsONNX.runModel(
-            session.value,
+            session,
             preprocessedData
         );
     }

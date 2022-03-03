@@ -5,30 +5,25 @@
 </template>
 
 <script setup>
-import {watch, inject, onMounted, toRaw} from "vue"
+import {watch, inject, onMounted, } from "vue"
 
 const output_image = inject('output_image');
 const glob_outputs = inject('glob_outputs');
 var output_canvas_2d = undefined;
 
-watch(()=>glob_outputs['SimSwap'],(newVal) => {
-  const val_raw = toRaw(newVal);
-  console.log(val_raw);
-  console.log('IN WATCH SimSwap');
-  if (Object.keys(val_raw).length != 0){
-    const {x0, y0, input_data} = val_raw;
-    output_canvas_2d.putImageData(input_data, x0, y0);
+watch(()=>glob_outputs.value['SimSwap'],(newVal) => {
+  if (newVal.input_data){
+    output_canvas_2d.putImageData(newVal.input_data, newVal.x0, newVal.y0);
   }
 }, {deep:true} );
 
 watch(output_image,(newVal) => {
   console.log('IN WATCH OUTPUT IMAGE');
-  console.log(newVal.value);
-  if (Object.keys(newVal.value).length != 0){
-    const {w, h, input_data} = newVal.value;
-    output_canvas_2d.canvas.width = w;
-    output_canvas_2d.canvas.height = h;
-    output_canvas_2d.drawImage(input_data, 0, 0);
+  console.log(newVal);
+  if (newVal.input_data){
+    output_canvas_2d.canvas.width = newVal.w;
+    output_canvas_2d.canvas.height = newVal.h;
+    output_canvas_2d.drawImage(newVal.input_data, 0, 0);
   }
 });
 
