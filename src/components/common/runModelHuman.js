@@ -15,9 +15,9 @@ function init() {
     return {
         cacheSensitivity: 0,
         deallocate: false,
-        cacheModels: false, //true
+        cacheModels: true, //true
         async:true,
-        debug:true,
+        debug:false,
         wasmPlatformFetch:true,
         warmup:'face',
         wasmPath:"./js/",
@@ -200,13 +200,17 @@ export async function warmupModel(session) {
 }
 
 export async function runModel(model, preprocessedData){
-
-  console.log(model,preprocessedData);
-  const start = new Date();
-  const output = await model.detect(preprocessedData);
-  const end = new Date();
-  const inferenceTime = (end.getTime() - start.getTime());
-  return [output, inferenceTime];
+  try{
+    console.log(model,preprocessedData);
+    const start = new Date();
+    const output = await model.detect(preprocessedData);
+    const end = new Date();
+    const inferenceTime = (end.getTime() - start.getTime());
+    return [output, inferenceTime];
+  }
+  catch(e){
+    throw new Error("Error: Cant run model.");
+  }
 
 
 }

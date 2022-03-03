@@ -29,6 +29,11 @@
           a different backend or refreshing the page.
         </div>
       </div>
+      <div class="error-message-container" v-if="modelRunningError">
+        <div class="error-message">
+          Error: Model is not loaded. Wait or check your internet connection. Please be aware what the model file size can be ~300Mb.
+        </div>
+      </div>
     </div>
     <div class="inference-time-container">
         <span class="inference-time">Inference Time: </span>
@@ -63,8 +68,9 @@ const backendSelectList = ref([
     { text: "CPU-WebAssembly", value: "wasm" },
 ]); //text: string; value: string
 const modelLoading = ref(true);
-const modelInitializing = ref(true);
+const modelInitializing = ref(false);
 const modelLoadingError = ref(false);
+const modelRunningError = ref(false);
 const sessionRunning = ref(false);
 
 var session = undefined; //InferenceSession()
@@ -89,7 +95,9 @@ watch(sessionBackend, async function(){
 onMounted(async ()=>{
     if (props.modelName.startsWith('tf')){
         // const FilepathNR = toRef(props, 'modelFilepath');
+        
         modelFile = props.modelFilepath;//FilepathNR.value;
+
     }
     else{
         const response = await fetch(props.modelFilepath);
@@ -115,23 +123,23 @@ async function initSession(){
     sessionRunning.value = false;
     modelLoadingError.value = false;
     if (sessionBackend.value === "webgl") {
-    if (gpuSession) {
-        console.log('gpu-preloaded');
-        session = gpuSession;
-        return;
-    }
-    modelLoading.value = true;
-    modelInitializing.value = true;
+        if (gpuSession) {
+            console.log('gpu-preloaded');
+            session = gpuSession;
+            return;
+        }
     }
     if (sessionBackend.value === "wasm") {
-    if (cpuSession) {
-        console.log('cpu-preloaded');
-        session = cpuSession;
-        return;
-    }
+        if (cpuSession) {
+            console.log('cpu-preloaded');
+            session = cpuSession;
+            return;
+        }
     modelLoading.value = true;
+    console.log(modelLoading.value, 'MODELLOADING');
     modelInitializing.value = true;
     }
+    // setTimeout(() => {
     try {
         if (props.modelName.startsWith('tf')){
             if (sessionBackend.value === "webgl") {
@@ -144,7 +152,6 @@ async function initSession(){
                 console.log('created-cpu');
                 session = cpuSession;
             }
-            
         }
         else{
             if (sessionBackend.value === "webgl") {
@@ -157,7 +164,6 @@ async function initSession(){
                 session = cpuSession;
             }
         }
-        
     } catch (e) {
         console.log(e,'error',e.stack);
         console.log(e.message);
@@ -174,8 +180,8 @@ async function initSession(){
             console.log('cpuerr');
         }
         throw new Error("Error: Backend (Loading) not supported. ");
-        
     }
+    // }, 1000);
     modelLoading.value = false;
     console.log('stop loading');
     console.log(session);
@@ -204,8 +210,9 @@ async function initSession(){
 }
 
 async function runModel(inputs_){
-
-    if (modelLoadingError.value){
+    modelRunningError.value = false;
+    if (modelLoadingError.value || modelLoading.value){
+        modelRunningError.value = true;
         throw new Error("Model is not loaded cant run."); 
     }
 
@@ -220,10 +227,10 @@ async function runModel(inputs_){
     
     if (props.modelName.startsWith('tf')){
     //!!!!
-    [tensorOutput, inferenceTime.value] = await runModelUtilsHuman.runModel(
-        session,
-        preprocessedData
-    );
+        [tensorOutput, inferenceTime.value] = await runModelUtilsHuman.runModel(
+            session,
+            preprocessedData
+        );
     //!!!!
     }
     else{

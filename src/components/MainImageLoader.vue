@@ -81,7 +81,7 @@ export default {
             props.isRunModels?"cont-sup":"cont-main"
           )[0];
         
-        await loadImageToCanvas('images/dragdrop.png');
+        // await loadImageToCanvas('images/dragdrop.png');
       });
 
       async function loadImageToCanvas(url) {
@@ -202,7 +202,7 @@ export default {
       console.log(newVal);
       // canvas_reload.value = newVal;
       if (newVal){
-        await loadImageToCanvas('images/dragdrop.png'); //await 
+        // await loadImageToCanvas('images/dragdrop.png'); //await 
         tf_outputs.value = [];
         boxes_id.value = 0;
         clear_glob_outputs();

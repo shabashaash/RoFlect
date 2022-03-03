@@ -11,11 +11,20 @@ function init() {
     // env.wasm.simd = false;
     ort.env.wasm.numThreads = 4;
     ort.env.wasm.simd = true;
+    ort.env.wasm.proxy = true;
+    ort.env.wasm.initTimeout = 1000;
   //   ort.env.webgl.matmulMaxBatchSize = 0
   }
 export async function createModelCpu(model){
     init();
-    return await InferenceSession.create(model, {executionProviders: ['wasm']}); //, executionMode: "parallel"
+    // setTimeout(async () => {
+
+
+    // await new Promise(resolve => setTimeout(resolve, 2000)); //GIVE TIME FOR ANOTHER MODEL! BAD THING THINKING OF CONVEER EXECUTION
+
+
+    return await InferenceSession.create(model, {executionProviders: ['wasm'], graphOptimizationLevel:'all'});
+    // }, 100); //, executionMode: "parallel"
 }
 export async function createModelGpu(model){
     init();

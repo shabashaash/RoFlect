@@ -30,6 +30,13 @@ export const initStore = () => {
             glob_outputs.value[key] = {};
         }
     };
+    
+
+    // const model_init_conveer = ref([]);
+
+    // const push_init_conveer = (val) => {
+    //   model_init_conveer.value.push(val);
+    // };
 
     const output_image = reactive({
 
@@ -67,6 +74,8 @@ export const initStore = () => {
   // provide("push_elem_glob_outputs", push_elem_glob_outputs);
   provide("clear_glob_outputs", clear_glob_outputs);
   
+  // provide("model_init_conveer",readonly(model_init_conveer));
+  // provide("push_init_conveer",push_init_conveer);
 
   provide("output_image",readonly(output_image));
   provide("updateoutput_image",updateoutput_image);
