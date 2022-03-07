@@ -19,7 +19,7 @@ const messagecomputed = computed(function(){
     } else if (props.modelInitializing) {
         return "Loading model done. Initializing model...";
     } else if (props.sessionRunning) {
-        console.log("RUNNIG MODEL");
+        // console.log("RUNNIG MODEL");
         return "Running model...";
     } else {
         return "";

@@ -21,6 +21,12 @@ module.exports = defineConfig({
        .test(/.wasm$/)
        .use('wasm-loader')
        .loader('wasm-loader')
+    webpackConfig.module
+    .rule('worker')
+       .test(/\.worker\.js$/)
+       .use('worker-loader')
+       .loader('worker-loader')
+       
   },
   transpileDependencies: true
 })

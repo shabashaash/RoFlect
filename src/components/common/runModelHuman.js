@@ -95,15 +95,15 @@ export async function createModelCpu(model){
 
 
 
-    console.log('before_init');
+    // console.log('before_init');
 
     await human.init();
     
-    console.log('after_init');
+    // console.log('after_init');
 
     await human.load();
 
-    console.log('after_load');
+    // console.log('after_load');
     // throw new Error("Error: Backend (Loading) not supported. ");
     return await human;
 
@@ -168,9 +168,9 @@ export async function createModelGpu(model){
 }
 
 export async function warmupModel(session) {
-    console.log('lets try this');
-    console.log(session);
-    console.log(session,'modelinwarmuphuman');
+    // console.log('lets try this');
+    // console.log(session);
+    // console.log(session,'modelinwarmuphuman');
 
     // console.log(session,'modelinwarmuphuman');
     try{
@@ -201,7 +201,7 @@ export async function warmupModel(session) {
 
 export async function runModel(model, preprocessedData){
   try{
-    console.log(model,preprocessedData);
+    // console.log(model,preprocessedData);
     const start = new Date();
     const output = await model.detect(preprocessedData);
     const end = new Date();

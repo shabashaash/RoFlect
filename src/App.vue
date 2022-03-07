@@ -26,7 +26,7 @@ initStore();
 const is_popup_visible = ref(false);
 const updateis_popup_visible = (val)=>{
     is_popup_visible.value = val;
-    console.log('updating_popup');
+    // console.log('updating_popup');
 };
 
 provide("is_popup_visible", readonly(is_popup_visible));

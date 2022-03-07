@@ -59,7 +59,7 @@ function preprocess(data_in) {
 }
 
 function postprocess(tensor) {
-  console.log('INSETUPSCRIPT');
+  // console.log('INSETUPSCRIPT');
   var data = new Uint8ClampedArray(224*224*4); //Uint8ClampedArray  ArrayBuffer
   // for (let i = 0; i < tensor.size; i+=4){
   //   data[i] = tensor.data[i]*255;
@@ -99,7 +99,7 @@ function postprocess(tensor) {
     t += 1;
   }
 
-  console.log(data,'uintdata');
+  // console.log(data,'uintdata');
   return data;
 }
 </script>

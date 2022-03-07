@@ -22,8 +22,8 @@ import { Tensor } from "onnxruntime-web"
 import resizeImageData from 'resize-image-data'
 
 
-const MODEL_FILEPATH_PROD = "./onnx_models/ArcFace_fix/arcFace_fromcheck.onnx";//"./onnx_models/ArcFace_fix/updated_arcfaceresnet100-8.all.ort"//'../../assets/onnx_models/ArcFace_fix/updated_arcfaceresnet100-8.all.ort';
-const MODEL_FILEPATH_DEV = "./onnx_models/ArcFace_fix/arcFace_fromcheck.onnx";//"./onnx_models/ArcFace_fix/updated_arcfaceresnet100-8.all.ort"//'../../assets/onnx_models/ArcFace_fix/updated_arcfaceresnet100-8.all.ort';
+const MODEL_FILEPATH_PROD = "./onnx_models/ArcFace_fix/arcFace_fromcheck_quant.onnx";//"./onnx_models/ArcFace_fix/updated_arcfaceresnet100-8.all.ort"//'../../assets/onnx_models/ArcFace_fix/updated_arcfaceresnet100-8.all.ort';
+const MODEL_FILEPATH_DEV = "./onnx_models/ArcFace_fix/arcFace_fromcheck_quant.onnx";//"./onnx_models/ArcFace_fix/updated_arcfaceresnet100-8.all.ort"//'../../assets/onnx_models/ArcFace_fix/updated_arcfaceresnet100-8.all.ort';
 
 const modelFilepath = ref();
 
@@ -60,7 +60,7 @@ function preprocess(data_in) {
   const scaled = resizeImageData(data_in_224, 112, 112, 'nearest-neighbor'); //nearest-neighbor
   const r_data = runModelUtils.imageDataRightFormat(scaled.data, [112,112]); //DANGER?!
 
-  console.log(r_data,'r_data');
+  // console.log(r_data,'r_data');
 
   return [new Tensor("float32", r_data, [
     1,
@@ -71,12 +71,12 @@ function preprocess(data_in) {
 }
 
 function postprocess(tensor) {
-  console.log(tensor,'POSTPROCESS');
+  // console.log(tensor,'POSTPROCESS');
 
 
   const L2 = Math.hypot.apply(null, tensor.data);
   const div_ = L2!=0?L2:0.0001;
-  console.log(L2,'L2');
+  // console.log(L2,'L2');
   const new_data = new Float32Array(tensor.size);
 
   for (let i = 0; i < tensor.size; i++) {

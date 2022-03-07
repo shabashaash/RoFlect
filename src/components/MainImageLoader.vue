@@ -91,7 +91,7 @@ export default {
           return;
         }
         imageLoadingError.value = false;
-        console.log('before_load_image');
+        // console.log('before_load_image');
         try {
           var data = await loadImage(url, {
             maxWidth: 1200,
@@ -108,8 +108,8 @@ export default {
           throw new Error("Cant load image, maybe there is a trouble with internet connection or try to use another image.");
         }
 
-        console.log('after_load_image'); 
-        console.log(data);
+        // console.log('after_load_image'); 
+        // console.log(data);
 
         var img = data.image;
 
@@ -119,9 +119,9 @@ export default {
         element_cont.style.width = img.width + 'px';
         element_cont.style.height = img.height + 'px';
 
-        console.log(element);
+        // console.log(element);
 
-        console.log(img.width,img.height);
+        // console.log(img.width,img.height);
         if (element) {
           const ctx = element.getContext("2d");
           if (ctx) {
@@ -131,13 +131,15 @@ export default {
         }
         if (!props.isRunModels){
           updateoutput_image({w:img.width, h:img.height, input_data:img});
-          console.log('updating_context_new_image');
+          // console.log('updating_context_new_image');
         }
 
-        console.log('here');      
+        // console.log('here');      
     }
 
     async function onDrop(acceptFiles, rejectReasons) {
+
+
         await loadImageToCanvas(URL.createObjectURL(acceptFiles[0])); //await
 
         const ctx = element.getContext("2d");
@@ -148,7 +150,7 @@ export default {
           ctx.canvas.width,
           ctx.canvas.height
         );
-        console.log(imageData,'imageData');
+        // console.log(imageData,'imageData');
 
         var tf_outputs_loc = await functions_.value['tf_Human'](imageData);
         for (let i = 0; i < tf_outputs_loc.length; i++){
@@ -156,21 +158,21 @@ export default {
         }
         tf_outputs.value = tf_outputs_loc;
         
-        console.log(functions_.value, 'outs');
+        // console.log(functions_.value, 'outs');
         console.log(rejectReasons);
     }
 
     const { getRootProps, getInputProps, ...rest } = useDropzone({ onDrop, noClick:true, accept:"image/png,image/gif,image/jpeg,image/webp" });
         
     async function dbAction(x0,y0,w,h){
-      console.log('inDBACTION');
-      console.log(x0,y0,w,h);
+      // console.log('inDBACTION');
+      // console.log(x0,y0,w,h);
       const ctx = element.getContext("2d");
       const input_data = ctx.getImageData(x0,y0,w,h);
       if (props.isRunModels){
         const latent_id = await functions_.value['ArcFace'](input_data);
 
-        console.log(glob_outputs.value['tf_output'],'gloutclick');
+        // console.log(glob_outputs.value['tf_output'],'gloutclick');
         
         const val = await functions_.value['SimSwap']([glob_outputs.value['tf_output'].input_data, latent_id]);
         
@@ -191,15 +193,15 @@ export default {
           h:h, 
           input_data:input_data
         });
-        console.log('indbclick');
+        // console.log('indbclick');
         updateis_popup_visible(true);
       }
     }
 
     watch(canvas_reload, async (newVal) => {
-      console.log('inwatch');
-      console.log(canvas_reload.value);
-      console.log(newVal);
+      // console.log('inwatch');
+      // console.log(canvas_reload.value);
+      // console.log(newVal);
       // canvas_reload.value = newVal;
       if (newVal){
         // await loadImageToCanvas('images/dragdrop.png'); //await 

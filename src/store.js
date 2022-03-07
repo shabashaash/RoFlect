@@ -1,5 +1,15 @@
 import {provide, reactive, ref, readonly} from "vue";
 
+
+
+// function createInlineWorker(fn) {
+//   let blob = new Blob(['self.onmessage = ', fn.toString()], { type: 'text/javascript' });
+//   let url = URL.createObjectURL(blob);
+
+//   return new Worker(url);
+// }
+
+
 export const initStore = () => {
     // State
 
@@ -19,7 +29,7 @@ export const initStore = () => {
         
     });
     const set_elem_glob_outputs = (key, val)=>{
-        console.log(val,key,"UPDATEDGLOBOUTPUTS")
+        // console.log(val,key,"UPDATEDGLOBOUTPUTS")
         glob_outputs.value[key] = val;
     };
     // const push_elem_glob_outputs = (key, val)=>{
@@ -42,7 +52,7 @@ export const initStore = () => {
 
     }); //document.createElement("canvas")
     const updateoutput_image = (val) => {
-      console.log('updating_out_image',val)
+      // console.log('updating_out_image',val)
       output_image.h = val.h;
       output_image.w = val.w;
       output_image.input_data = val.input_data;
@@ -52,6 +62,38 @@ export const initStore = () => {
     //     is_popup_visible.value = val;
     // };
 
+    // const models = [];
+    // let myWorker = createInlineWorker(async function (ev) {
+    //   if (models.length == 2){
+    //     // const sessions = [];
+    //     // console.log(models);
+        
+    //     const sessions = await Promise.allSettled(models);
+
+
+    //     // models.forEach(model => {
+    //     //     const ses = await ONNXUtils.createModelCpu(model.modelFile);
+    //     //     sessions.push({
+    //     //         "session":ses,
+    //     //         "modelName": model.modelName
+    //     //     });
+    //     // });
+
+    //     self.postMessage({
+    //         "models": sessions
+    //     });
+    //   }
+    //   else{
+    //       // models.push({
+    //       //     "modelFile":ev.data.modelFile,
+    //       //     "modelName":ev.data.modelName
+    //       // });
+    //       models.push(ONNXUtils.createModelCpu(ev.data.modelFile));
+    //   }
+    // });
+
+
+    // const manager_worker = ref(new Worker("/src/components/common/wwmanage.worker.js"));
 
 //   const state = reactive({
 //     name: "Bob Day",
@@ -79,6 +121,8 @@ export const initStore = () => {
 
   provide("output_image",readonly(output_image));
   provide("updateoutput_image",updateoutput_image);
+
+  // provide("manager_worker",readonly(manager_worker));
 //   provide("is_popup_visible", readonly(is_popup_visible));
 //   provide("updateis_popup_visible", updateis_popup_visible);
 };

@@ -46,7 +46,7 @@ function postprocess(tensor) {
       h: face.box[3],//h + Math.round(hratio/2) //- face.box[1],
       id : counter++,
     });
-    console.log(face);
+    // console.log(face);
   });
   return bboxes;
 }

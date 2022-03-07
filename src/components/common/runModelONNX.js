@@ -1,17 +1,21 @@
-import {InferenceSession, Tensor} from 'onnxruntime-web';
+import {InferenceSession, Tensor} from 'onnxruntime-web'; //InferenceSession
 import * as ort from 'onnxruntime-web';
 
-
+// const InferenceSession = 0;
+// const Tensor = 0;
+// const ort = 0;
 
 // const IN_MEAN = [0.485, 0.456, 0.406];
 // const IN_STD = [0.229, 0.224, 0.225];
-
+// export default
 
 function init() {
     // env.wasm.simd = false;
+    // ort.env.debug = true;
     ort.env.wasm.numThreads = 4;
     ort.env.wasm.simd = true;
     ort.env.wasm.proxy = true;
+
     // ort.env.wasm.initTimeout = 1000;
   //   ort.env.webgl.matmulMaxBatchSize = 0
   }
@@ -21,9 +25,13 @@ export async function createModelCpu(model){
 
 
     // await new Promise(resolve => setTimeout(resolve, 2000)); //GIVE TIME FOR ANOTHER MODEL! BAD THING THINKING OF CONVEER EXECUTION
+    // ort.env.wasm.proxy = false;
 
+    // await new Promise(resolve => setTimeout(resolve, 1000));
+    // ort.env.wasm.proxy = true;
 
-    return await InferenceSession.create(model, {executionProviders: ['wasm'], graphOptimizationLevel:'all'});
+    return InferenceSession.create(model, {executionProviders: ['wasm'], graphOptimizationLevel:'all'});
+
     // }, 100); //, executionMode: "parallel"
 }
 export async function createModelGpu(model){
@@ -31,7 +39,7 @@ export async function createModelGpu(model){
     return await InferenceSession.create(model, {executionProviders: ['webgl']});
 }
 export async function warmupModel(model, dims) {
-    console.log(model,'modelinwarmuponnx');
+    // console.log(model,'modelinwarmuponnx');
     // OK. we generate a random input and call Session.run() as a warmup query
     // var warmupTensors = [];
 
@@ -47,7 +55,7 @@ export async function warmupModel(model, dims) {
       for (let i = 0; i < size; i++) {
           warmupTensor.data[i] = Math.random() * 2.0 - 1.0;  // random value [-1.0, 1.0)
       }
-      console.log(warmupTensor,'wtensor');
+      // console.log(warmupTensor,'wtensor');
       // warmupTensors.push(warmupTensor);
       feeds[model.inputNames[i]] = warmupTensor;
     }
@@ -63,6 +71,7 @@ export async function warmupModel(model, dims) {
         // const feeds= {};
         // feeds[model.inputNames[0]] = warmupTensor;
         await model.run(feeds);
+        // ort.env.wasm.proxy = true;
     } catch (e) {
         console.error(e);
         throw new Error(e);
@@ -116,16 +125,16 @@ export async function runModel(model, preprocessedData){
       for(let i = 0; i<preprocessedData.length; i++){
         feeds[model.inputNames[i]] = preprocessedData[i];
       }
-      console.log(feeds,'feeds');
-      console.log('before_run');
+      // console.log(feeds,'feeds');
+      // console.log('before_run');
       const outputData = await model.run(feeds);
-      console.log('after_run');
+      // console.log('after_run');
       const end = new Date();
       const inferenceTime = (end.getTime() - start.getTime());
-      console.log(inferenceTime,'time');
+      // console.log(inferenceTime,'time');
 
 
-      console.log(outputData,'OUtput_datainFUNC');
+      // console.log(outputData,'OUtput_datainFUNC');
 
       const output = outputData[model.outputNames[0]];
   

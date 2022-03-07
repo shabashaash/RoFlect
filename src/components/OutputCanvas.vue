@@ -18,8 +18,8 @@ watch(()=>glob_outputs.value['SimSwap'],(newVal) => {
 }, {deep:true} );
 
 watch(output_image,(newVal) => {
-  console.log('IN WATCH OUTPUT IMAGE');
-  console.log(newVal);
+  // console.log('IN WATCH OUTPUT IMAGE');
+  // console.log(newVal);
   if (newVal.input_data){
     output_canvas_2d.canvas.width = newVal.w;
     output_canvas_2d.canvas.height = newVal.h;
