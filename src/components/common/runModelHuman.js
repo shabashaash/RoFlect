@@ -105,7 +105,7 @@ export async function createModelCpu(model){
 
     // console.log('after_load');
     // throw new Error("Error: Backend (Loading) not supported. ");
-    return await human;
+    return human;
 
     //.catch(e=>{
       // console.log('inerr');
