@@ -20,7 +20,7 @@ const MODEL_FILEPATH_PROD = "/human_models/blazeface-back.json"//"blazeface.json
 const MODEL_FILEPATH_DEV = "/human_models/blazeface-back.json"//"blazeface.json"//'../../assets/onnx_models/ArcFace_fix/updated_arcfaceresnet100-8.all.ort';
 
 
-const modelFilepath = ref('');
+const modelFilepath = ref();
 modelFilepath.value = process.env.NODE_ENV === "production"
 ? MODEL_FILEPATH_PROD
 : MODEL_FILEPATH_DEV;
