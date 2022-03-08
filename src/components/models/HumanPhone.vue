@@ -16,8 +16,8 @@ import { ref } from 'vue'
 import ImageModel from "../ImageModel.vue"
 import * as runModelUtilsHuman from "../common/runModelHuman.js"
 
-const MODEL_FILEPATH_PROD = "blazeface-back.json"//"blazeface.json"//'../../assets/onnx_models/ArcFace_fix/updated_arcfaceresnet100-8.all.ort';
-const MODEL_FILEPATH_DEV = "blazeface-back.json"//"blazeface.json"//'../../assets/onnx_models/ArcFace_fix/updated_arcfaceresnet100-8.all.ort';
+const MODEL_FILEPATH_PROD = "/human_models/blazeface-back.json"//"blazeface.json"//'../../assets/onnx_models/ArcFace_fix/updated_arcfaceresnet100-8.all.ort';
+const MODEL_FILEPATH_DEV = "/human_models/blazeface-back.json"//"blazeface.json"//'../../assets/onnx_models/ArcFace_fix/updated_arcfaceresnet100-8.all.ort';
 
 
 const modelFilepath = ref('');

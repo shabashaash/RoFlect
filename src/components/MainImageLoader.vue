@@ -4,7 +4,14 @@
     <div class = "text-center" v-bind="getRootProps()">
       <input v-bind="getInputProps()">
       <div :class="[isRunModels ? 'cont-sup' : '', 'cont-main']">
+        <!-- <svg v-if="defaultImage" class="box-icon" xmlns="http://www.w3.org/2000/svg" width="50" height="43" viewBox="0 0 50 43">
+          <path d="M48.4 26.5c-.9 0-1.7.7-1.7 1.7v11.6h-43.3v-11.6c0-.9-.7-1.7-1.7-1.7s-1.7.7-1.7 1.7v13.2c0 .9.7 1.7 1.7 1.7h46.7c.9 0 1.7-.7 1.7-1.7v-13.2c0-1-.7-1.7-1.7-1.7zm-24.5 6.1c.3.3.8.5 1.2.5.4 0 .9-.2 1.2-.5l10-11.6c.7-.7.7-1.7 0-2.4s-1.7-.7-2.4 0l-7.1 8.3v-25.3c0-.9-.7-1.7-1.7-1.7s-1.7.7-1.7 1.7v25.3l-7.1-8.3c-.7-.7-1.7-.7-2.4 0s-.7 1.7 0 2.4l10 11.6z">
+          </path>
+        </svg> -->
+
         <canvas :class="[isRunModels ? 'img-cont-sup' : '', 'img-cont-main']"/> 
+
+
         <Vue3DraggableResizable v-for="item in tf_outputs" 
           v-model:x="item.x0"
           v-model:y="item.y0"
@@ -17,6 +24,7 @@
           :parent="true" :draggable="true" :resizable="true"
           @dblclick="dbAction(item.x0, item.y0, item.w, item.h)"
         />
+        
       </div>
       <p class = "drop-active" v-if="isDragActive">Drop the files here ...</p>
       <p v-else>Drag 'n' drop some files here, or click to select files</p>
@@ -65,24 +73,53 @@ export default {
       const set_elem_glob_outputs = inject('set_elem_glob_outputs');
       const clear_glob_outputs = inject('clear_glob_outputs');
       const updateoutput_image = inject('updateoutput_image');
-      var element = undefined;
-      var element_cont = undefined;
-      const boxes_id = ref(0);
+      var context = undefined;
+      var context_cont = undefined;
+      var boxes_id = 0;
       const tf_outputs = ref([]);
       const imageLoadingError = ref(false);
+      // const defaultImage = ref(true);
       
 
-      onMounted(async ()=> {
-        element = document.getElementsByClassName(
+      onMounted(()=> {
+        // defaultImage.value = false;
+        context = document.getElementsByClassName(
             props.isRunModels?"img-cont-sup":"img-cont-main"
-        )[0];
+        )[0].getContext("2d");
 
-        element_cont = document.getElementsByClassName(
+        context_cont = document.getElementsByClassName(
             props.isRunModels?"cont-sup":"cont-main"
           )[0];
-        
+        // defaultImage.value = true;
+        // updatecanvas_reload(true);
         // await loadImageToCanvas('images/dragdrop.png');
+        drawDefault();
       });
+
+      function drawDefault(){
+
+        context.canvas.width = '50';
+        context.canvas.height = '43';
+
+
+        context_cont.style.width = '50px';
+        context_cont.style.height = '43px';
+
+        // var ctx = element.getContext('2d');
+
+        context.clearRect(0, 0, '50', '43');
+
+        context.strokeStyle = '#000';
+        context.lineWidth = 1;
+        context.fillStyle = '#000'
+
+        var p = new Path2D("M48.4 26.5c-.9 0-1.7.7-1.7 1.7v11.6h-43.3v-11.6c0-.9-.7-1.7-1.7-1.7s-1.7.7-1.7 1.7v13.2c0 .9.7 1.7 1.7 1.7h46.7c.9 0 1.7-.7 1.7-1.7v-13.2c0-1-.7-1.7-1.7-1.7zm-24.5 6.1c.3.3.8.5 1.2.5.4 0 .9-.2 1.2-.5l10-11.6c.7-.7.7-1.7 0-2.4s-1.7-.7-2.4 0l-7.1 8.3v-25.3c0-.9-.7-1.7-1.7-1.7s-1.7.7-1.7 1.7v25.3l-7.1-8.3c-.7-.7-1.7-.7-2.4 0s-.7 1.7 0 2.4l10 11.6z");
+        p.moveTo(100, 100);
+        context.stroke(p);
+        context.fill(p);
+      }
+
+
 
       async function loadImageToCanvas(url) {
         if (!url) {
@@ -91,6 +128,7 @@ export default {
           return;
         }
         imageLoadingError.value = false;
+        // defaultImage.value = false;
         // console.log('before_load_image');
         try {
           var data = await loadImage(url, {
@@ -113,22 +151,22 @@ export default {
 
         var img = data.image;
 
-        element.width = img.width;
-        element.height = img.height;
+        context.canvas.width = img.width;
+        context.canvas.height = img.height;
 
-        element_cont.style.width = img.width + 'px';
-        element_cont.style.height = img.height + 'px';
+        context_cont.style.width = img.width + 'px';
+        context_cont.style.height = img.height + 'px';
 
         // console.log(element);
 
         // console.log(img.width,img.height);
-        if (element) {
-          const ctx = element.getContext("2d");
-          if (ctx) {
-            ctx.drawImage(img, 0, 0);
-          }
-          
+        // if (element) {
+          // const ctx = element.getContext("2d");
+        if (context) {
+          context.drawImage(img, 0, 0);
         }
+          
+        // }
         if (!props.isRunModels){
           updateoutput_image({w:img.width, h:img.height, input_data:img});
           // console.log('updating_context_new_image');
@@ -142,24 +180,24 @@ export default {
 
         await loadImageToCanvas(URL.createObjectURL(acceptFiles[0])); //await
 
-        const ctx = element.getContext("2d");
+        // const ctx = element.getContext("2d");
         
-        const imageData = ctx.getImageData(
+        const imageData = context.getImageData(
           0,
           0,
-          ctx.canvas.width,
-          ctx.canvas.height
+          context.canvas.width,
+          context.canvas.height
         );
-        // console.log(imageData,'imageData');
-
         var tf_outputs_loc = await functions_.value['tf_Human'](imageData);
         for (let i = 0; i < tf_outputs_loc.length; i++){
-          tf_outputs_loc[i].id = boxes_id.value++;
+          tf_outputs_loc[i].id = boxes_id++;
         }
         tf_outputs.value = tf_outputs_loc;
         
         // console.log(functions_.value, 'outs');
+        // if (rejectReasons != []){
         console.log(rejectReasons);
+        // }
     }
 
     const { getRootProps, getInputProps, ...rest } = useDropzone({ onDrop, noClick:true, accept:"image/png,image/gif,image/jpeg,image/webp" });
@@ -167,8 +205,8 @@ export default {
     async function dbAction(x0,y0,w,h){
       // console.log('inDBACTION');
       // console.log(x0,y0,w,h);
-      const ctx = element.getContext("2d");
-      const input_data = ctx.getImageData(x0,y0,w,h);
+      // const ctx = element.getContext("2d");
+      const input_data = context.getImageData(x0,y0,w,h);
       if (props.isRunModels){
         const latent_id = await functions_.value['ArcFace'](input_data);
 
@@ -198,18 +236,21 @@ export default {
       }
     }
 
-    watch(canvas_reload, async (newVal) => {
+    watch(canvas_reload, (newVal) => {
       // console.log('inwatch');
       // console.log(canvas_reload.value);
       // console.log(newVal);
       // canvas_reload.value = newVal;
       if (newVal){
         // await loadImageToCanvas('images/dragdrop.png'); //await 
+        // defaultImage.value = true;
+        drawDefault();
         tf_outputs.value = [];
-        boxes_id.value = 0;
+        boxes_id = 0;
         clear_glob_outputs();
         updatecanvas_reload(false);
         updateis_popup_visible(false);
+        // updateoutput_image({w:0, h:0, input_data:img});
       }
     });
 
@@ -220,8 +261,10 @@ export default {
       tf_outputs,
       dbAction,
       updateis_popup_visible,
-      boxes_id,
+      // boxes_id,
       imageLoadingError,
+      canvas_reload,
+      // defaultImage,
       ...rest
     }
   },
@@ -236,6 +279,19 @@ export default {
   max-height: 1200px;
 }
 
+
+
+.upload-drag .upload .text-center .box-icon{
+  z-index: 2;
+  width: 100%;
+  height: 80px;
+  fill: #9294b3;
+  display: block;
+  margin-bottom: 40px;
+  position: relative;
+}
+
+
 .cont-main{
   max-width: 1200px;
   max-height: 1200px;
@@ -247,7 +303,7 @@ export default {
 
 .cont-sup{
   background-color:rgb(255, 255, 255);
-  border: 1px #000000 solid;
+  /* border: 1px #000000 solid; */
 }
 
 

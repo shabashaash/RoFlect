@@ -22,8 +22,8 @@ import { Tensor } from "onnxruntime-web"
 import resizeImageData from 'resize-image-data'
 
 
-const MODEL_FILEPATH_PROD = "./onnx_models/ArcFace_fix/arcFace_fromcheck_quant.onnx";//"./onnx_models/ArcFace_fix/updated_arcfaceresnet100-8.all.ort"//'../../assets/onnx_models/ArcFace_fix/updated_arcfaceresnet100-8.all.ort';
-const MODEL_FILEPATH_DEV = "./onnx_models/ArcFace_fix/arcFace_fromcheck_quant.onnx";//"./onnx_models/ArcFace_fix/updated_arcfaceresnet100-8.all.ort"//'../../assets/onnx_models/ArcFace_fix/updated_arcfaceresnet100-8.all.ort';
+const MODEL_FILEPATH_PROD = "/onnx_models/ArcFace_fix/arcFace_fromcheck_quant.onnx";//"./onnx_models/ArcFace_fix/updated_arcfaceresnet100-8.all.ort"//'../../assets/onnx_models/ArcFace_fix/updated_arcfaceresnet100-8.all.ort';
+const MODEL_FILEPATH_DEV = "/onnx_models/ArcFace_fix/arcFace_fromcheck_quant.onnx";//"./onnx_models/ArcFace_fix/updated_arcfaceresnet100-8.all.ort"//'../../assets/onnx_models/ArcFace_fix/updated_arcfaceresnet100-8.all.ort';
 
 const modelFilepath = ref();
 

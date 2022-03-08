@@ -78,9 +78,9 @@ var gpuSession = undefined; //InferenceSession()
 var cpuSession = undefined; //InferenceSession()
 // var modelFile = undefined;
 
-//!!!!!!!
+
 // var modelFile_loc = undefined;
-//!!!!!!!
+
 
 const inferenceTime = ref(0);
 //ref(new ArrayBuffer(0));
@@ -132,10 +132,10 @@ onMounted(async ()=>{
 
 
 
-        //!!!!!!!
+
         // const response_loc = await fetch("./onnx_models/Swap_int64/true_visual_224_orig_opset13_quant.onnx");
         // modelFile_loc = await response_loc.arrayBuffer();
-        //!!!!!!!
+
 
     // }
 
@@ -219,10 +219,10 @@ async function initSession(){
                 //     "modelFile": modelFile,
                 //     "modelName": props.modelName
                 // });
-                //!!!!!!!
+
                 // const cpu_session_loc = await runModelUtilsONNX.createModelCpu(modelFile_loc);
                 // console.log(cpu_session_loc, 'HEY BRO NICE TITS');
-                //!!!!!!!
+
 
                 // }, 1000);
                 
@@ -314,12 +314,12 @@ async function runModel(inputs_){
     // console.log(preprocessedData);
     
     if (props.modelName.startsWith('tf')){
-    //!!!!
+
         [tensorOutput, inferenceTime.value] = await runModelUtilsHuman.runModel(
             session,
             preprocessedData
         );
-    //!!!!
+
     }
     else{
         [tensorOutput, inferenceTime.value] = await runModelUtilsONNX.runModel(
