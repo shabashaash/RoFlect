@@ -1,5 +1,5 @@
 # ai-vue
-
+# WORKING ONLY IN LATEST CHROMIUM BROWSERS DUE TO WASM SUPPORT
 ## Project setup
 ```
 npm install
